@@ -34,6 +34,6 @@ int main(int argc, char *argv[])
         directory = ".";
     }
 
-    printf("Exploring directory: %s\n", directory);
+    printf("Exploring directory: %s\n", directory);  // TODO Actual implementation
     return 0;
 }
