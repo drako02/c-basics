@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "fileops.h"
 
 void print_usage(const char *program_name)
 {

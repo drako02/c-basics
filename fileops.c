@@ -44,3 +44,49 @@ int read_file_content(const char *filename, char **content, size_t *size)
     fclose(fp);
     return FILE_SUCCESS;
 }
+
+int write_file_content(const char *filename, const char *content){
+    if(filename == NULL || content == NULL){
+        return FILE_ERROR_MEMORY;
+    }
+
+    FILE *fp = fopen(filename, "w");
+    if (fp == NULL){
+        if(errno == EACCES){
+            return FILE_ERROR_PERMISSION;
+        }
+        return FILE_ERROR_NOT_FOUND;
+    }
+
+    size_t content_len = strlen(content);
+    size_t written = fwrite(content, 1, content_len, fp);
+    
+    fclose(fp);
+
+    if(written != content_len){
+        return FILE_ERROR_NOT_FOUND;
+    }
+
+    return FILE_SUCCESS;
+}
+
+int file_exists(const char *filename){
+    FILE *fp = fopen(filename, "r");
+    if (fp != NULL){
+        fclose(fp);
+        return 1;
+    }
+
+    return 0;
+}
+
+void print_file_info(const file_info_t *info){
+    if(info == NULL){
+        return;
+    }
+
+    printf("%-30s %10ld bytes %s\n",
+           info->name,
+           info->size,
+           info->is_directory ? "[DIR]" : "[FILE]");
+}
