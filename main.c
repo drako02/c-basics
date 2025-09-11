@@ -48,6 +48,39 @@ int safe_string_copy(char *dest, const char *src, size_t dest_size){
     return 0;
 }
 
+void test_file_operations(){
+    printf("\n=== Testing File Operations ===\n");
+
+    const char *test_file = "test_file.txt";
+    printf("File '%s' exists: %s\n", test_file, file_exists(test_file) ? "Yes" : "No");
+
+    const char *test_content = "Hello from fsexplorer!\nThis is a test file.\n";
+    int result = write_file_content(test_file, test_content);
+
+    if(result == FILE_SUCCESS){
+        printf("Successfully wrote test file\n");
+    } else {
+        printf("Failed to write test file (error code: %d)\n", result);
+        return;
+    }
+
+    char *content = NULL;
+    size_t size = 0;
+
+    result = read_file_content(test_file, &content, &size);
+
+    if(result == FILE_SUCCESS){
+        printf("Read %zu bytes from file:\n", size);
+        printf("Content: %s", content);
+        free(content);
+    } else {
+        printf("Failed to read test file (error code: %d)\n", result);
+    }
+
+    remove(test_file);
+
+}
+
 int main(int argc, char *argv[])
 {
     const char *directory;
@@ -79,6 +112,8 @@ int main(int argc, char *argv[])
         free(fullpath);
         fullpath = NULL;
     }
+
+    test_file_operations();
 
     // printf("Exploring directory: %s\n", directory);
     return 0;
