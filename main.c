@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "fileops.h"
+#include "syscalls.h"
+#include <fcntl.h>
 
 void print_usage(const char *program_name)
 {
@@ -81,6 +83,45 @@ void test_file_operations(){
 
 }
 
+void compare_file_access_methods(){
+    printf("\n=== Comparing file access methods ===\n");
+
+    char *test_file = "syscall_test.txt";
+    char *test_content = "Testing system calls vs library calls";
+
+    printf("\n--- Standard Library Method ---\n");
+    FILE *fp =  fopen(test_file, "w");
+    if (fp){
+        fwrite(test_content, strlen(test_content), 1, fp);
+        fclose(fp);
+        printf("Standard library: File written successfully\n");
+    }
+
+    printf("\n--- System Call Method ---\n");
+    int fd = sys_open_file(test_file, O_WRONLY | O_CREAT | O_TRUNC);
+    if (fd != -1){
+        sys_write_file(fd, test_content, strlen(test_content));
+        sys_close_file(fd);
+        printf("System calls: File written successfully\n");
+    }
+
+    printf("\n--- Reading With System Calls ---\n");
+    fd = sys_open_file(test_file, O_RDONLY);
+    if (fd != -1){
+        char buffer[256];
+        ssize_t bytes = sys_read_file(fd, buffer, sizeof(buffer) - 1);
+        if (bytes > 0){
+            buffer[bytes] = '\0';
+            printf("Read content: %s\n", buffer);
+        }
+        sys_close_file(fd);
+
+    }
+
+    remove(test_file);    
+
+}
+
 int main(int argc, char *argv[])
 {
     const char *directory;
@@ -114,6 +155,7 @@ int main(int argc, char *argv[])
     }
 
     test_file_operations();
+    compare_file_access_methods();
 
     // printf("Exploring directory: %s\n", directory);
     return 0;
