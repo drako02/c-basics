@@ -37,3 +37,7 @@ int get_detailed_info(const char *path, detailed_file_info_t *info){
 
     return 0;
 }
+
+void print_permissions(mode_t mode) {
+    printf(S_ISDIR(mode) ? "d" : "-");
+}
