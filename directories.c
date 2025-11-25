@@ -59,4 +59,11 @@ void print_detailed_file_info(const detailed_file_info_t *info ){
     struct group *gr = getgrgid(info->gid);
 
     printf(" %8s %8s", pw ? pw->pw_name : "Unknown", gr ? gr->gr_name : "Unknown");
+
+    printf("%8ld", info->size);
+
+    char time_str[64];
+    struct tm *tm_info = localtime(&info->mtime);
+    strftime(time_str, sizeof(time_str), "%b %d %H:%M",tm_info);
+    printf("%s", time_str);
 }
