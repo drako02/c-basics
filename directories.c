@@ -53,17 +53,31 @@ void print_permissions(mode_t mode) {
 }
 
 void print_detailed_file_info(const detailed_file_info_t *info ){
+    // print permissions
     print_permissions(info->mode);
 
+    // print owner & group
     struct passwd *pw = getpwuid(info->uid);
     struct group *gr = getgrgid(info->gid);
 
     printf(" %8s %8s", pw ? pw->pw_name : "Unknown", gr ? gr->gr_name : "Unknown");
 
+    // print size
     printf("%8ld", info->size);
 
+    // print time
     char time_str[64];
     struct tm *tm_info = localtime(&info->mtime);
     strftime(time_str, sizeof(time_str), "%b %d %H:%M",tm_info);
     printf("%s", time_str);
+
+    // print type indicator
+    if (S_ISDIR(info->mode)) {
+        printf("/");
+    }  else if (info->mode & S_IXUSR) {
+        printf("*");
+    }
+
+    printf("\n");
+
 }
