@@ -4,6 +4,7 @@
 #include "fileops.h"
 #include "syscalls.h"
 #include <fcntl.h>
+#include "directories.h"
 
 void print_usage(const char *program_name)
 {
@@ -156,6 +157,9 @@ int main(int argc, char *argv[])
 
     test_file_operations();
     compare_file_access_methods();
+
+    list_directory_detailed(directory);
+    
 
     // printf("Exploring directory: %s\n", directory);
     return 0;
