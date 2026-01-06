@@ -19,10 +19,10 @@
 //     gid_t gid;
 // } detailed_file_info_t;
 
-int get_detailed_info(const char *path, detailed_file_info_t *info){
+int get_detailed_info(const char* path, detailed_file_info_t* info) {
     struct stat st;
 
-    if (stat(path, &st) == -1){
+    if (stat(path, &st) == -1) {
         perror("stat");
         return -1;
     };
@@ -42,24 +42,23 @@ int get_detailed_info(const char *path, detailed_file_info_t *info){
 void print_permissions(mode_t mode) {
     printf(S_ISDIR(mode) ? "d" : "-");
     printf((mode & S_IRUSR) ? "r" : "-");
-    printf((mode & S_IWUSR) ? "w": "-");
-    printf((mode & S_IXUSR) ? "x": "-");
+    printf((mode & S_IWUSR) ? "w" : "-");
+    printf((mode & S_IXUSR) ? "x" : "-");
     printf((mode & S_IRGRP) ? "r" : "-");
-    printf((mode & S_IWGRP) ? "w": "-");
-    printf((mode & S_IXGRP) ? "x": "-");
+    printf((mode & S_IWGRP) ? "w" : "-");
+    printf((mode & S_IXGRP) ? "x" : "-");
     printf((mode & S_IROTH) ? "r" : "-");
-    printf((mode & S_IWOTH) ? "w": "-");
-    printf((mode & S_IXOTH) ? "x": "-");
-
+    printf((mode & S_IWOTH) ? "w" : "-");
+    printf((mode & S_IXOTH) ? "x" : "-");
 }
 
-void print_detailed_file_info(const detailed_file_info_t *info ){
+void print_detailed_file_info(const detailed_file_info_t* info) {
     // print permissions
     print_permissions(info->mode);
 
     // print owner & group
-    struct passwd *pw = getpwuid(info->uid);
-    struct group *gr = getgrgid(info->gid);
+    struct passwd* pw = getpwuid(info->uid);
+    struct group* gr = getgrgid(info->gid);
 
     printf(" %8s %8s", pw ? pw->pw_name : "Unknown", gr ? gr->gr_name : "Unknown");
 
@@ -68,8 +67,8 @@ void print_detailed_file_info(const detailed_file_info_t *info ){
 
     // print time
     char time_str[64];
-    struct tm *tm_info = localtime(&info->mtime);
-    strftime(time_str, sizeof(time_str), "%b %d %H:%M",tm_info);
+    struct tm* tm_info = localtime(&info->mtime);
+    strftime(time_str, sizeof(time_str), "%b %d %H:%M", tm_info);
     printf(" %s", time_str);
 
     printf(" %s", info->name);
@@ -77,18 +76,17 @@ void print_detailed_file_info(const detailed_file_info_t *info ){
     // print type indicator
     if (S_ISDIR(info->mode)) {
         printf("/");
-    }  else if (info->mode & S_IXUSR) {
+    } else if (info->mode & S_IXUSR) {
         printf("*");
     }
 
     printf("\n");
-
 }
 
-int list_directory_detailed(const char *directory_path){
-    DIR *dir = opendir(directory_path);
+int list_directory_detailed(const char* directory_path) {
+    DIR* dir = opendir(directory_path);
 
-    if (dir == NULL){
+    if (dir == NULL) {
         perror("opendir");
         return -1;
     }
@@ -97,11 +95,11 @@ int list_directory_detailed(const char *directory_path){
     printf("Permissions  Owner   Group       Size Time       Name\n");
     printf("--------------------------------------------------------\n");
 
-    struct dirent *entry;
+    struct dirent* entry;
 
-    while ((entry = readdir(dir)) != NULL){
+    while ((entry = readdir(dir)) != NULL) {
 
-        if ((strcmp(entry->d_name, ".")) == 0 || (strcmp(entry->d_name, "..")) == 0){
+        if ((strcmp(entry->d_name, ".")) == 0 || (strcmp(entry->d_name, "..")) == 0) {
             continue;
         }
 
@@ -109,7 +107,7 @@ int list_directory_detailed(const char *directory_path){
         snprintf(full_path, sizeof(full_path), "%s/%s", directory_path, entry->d_name);
 
         detailed_file_info_t info;
-        if(get_detailed_info(full_path, &info) == 0){
+        if (get_detailed_info(full_path, &info) == 0) {
             strcpy(info.name, entry->d_name);
 
             print_detailed_file_info(&info);
@@ -117,5 +115,5 @@ int list_directory_detailed(const char *directory_path){
     }
 
     closedir(dir);
-    return 0;    
+    return 0;
 }

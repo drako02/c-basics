@@ -5,8 +5,7 @@
 #include <sys/stat.h>
 #include <time.h>
 
-typedef struct
-{
+typedef struct {
     char name[256];
     off_t size;
     mode_t mode;
@@ -15,9 +14,9 @@ typedef struct
     gid_t gid;
 } detailed_file_info_t;
 
-int get_detailed_info(const char *path, detailed_file_info_t *info);
+int get_detailed_info(const char* path, detailed_file_info_t* info);
 void print_permissions(mode_t mode);
-void print_detailed_file_info(const detailed_file_info_t *info);
-int list_directory_detailed(const char *directory_path);
+void print_detailed_file_info(const detailed_file_info_t* info);
+int list_directory_detailed(const char* directory_path);
 
 #endif

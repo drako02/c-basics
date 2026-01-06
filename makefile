@@ -12,4 +12,7 @@ clean:
 debug: CFLAGS += -DDEBUG -fsanitize=address
 debug: $(TARGET)
 
-.PHONY: clean debug
+format:
+	clang-format -i *c *.h
+
+.PHONY: clean debug format

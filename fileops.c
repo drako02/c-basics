@@ -3,22 +3,19 @@
 #include <string.h>
 #include <errno.h>
 
-int read_file_content(const char *filename, char **content, size_t *size)
-{
-    if (filename == NULL || content == NULL || size == NULL)
-    {
+int read_file_content(const char* filename, char** content, size_t* size) {
+    if (filename == NULL || content == NULL || size == NULL) {
         return FILE_ERROR_MEMORY;
     }
 
-    FILE *fp = fopen(filename, "r");
-    if (fp == NULL)
-    {
-        if (errno == ENOENT){
+    FILE* fp = fopen(filename, "r");
+    if (fp == NULL) {
+        if (errno == ENOENT) {
             return FILE_ERROR_NOT_FOUND;
-        } else if (errno == EACCES){
+        } else if (errno == EACCES) {
             return FILE_ERROR_PERMISSION;
         }
-        
+
         return FILE_ERROR_NOT_FOUND;
     }
 
@@ -26,13 +23,13 @@ int read_file_content(const char *filename, char **content, size_t *size)
     long file_size = ftell(fp);
     fseek(fp, 0, SEEK_SET);
 
-    if (file_size < 0){
+    if (file_size < 0) {
         fclose(fp);
         return FILE_ERROR_NOT_FOUND;
     }
 
     *content = malloc(file_size + 1);
-    if (content == NULL){
+    if (content == NULL) {
         fclose(fp);
         return FILE_ERROR_MEMORY;
     }
@@ -45,14 +42,14 @@ int read_file_content(const char *filename, char **content, size_t *size)
     return FILE_SUCCESS;
 }
 
-int write_file_content(const char *filename, const char *content){
-    if(filename == NULL || content == NULL){
+int write_file_content(const char* filename, const char* content) {
+    if (filename == NULL || content == NULL) {
         return FILE_ERROR_MEMORY;
     }
 
-    FILE *fp = fopen(filename, "w");
-    if (fp == NULL){
-        if(errno == EACCES){
+    FILE* fp = fopen(filename, "w");
+    if (fp == NULL) {
+        if (errno == EACCES) {
             return FILE_ERROR_PERMISSION;
         }
         return FILE_ERROR_NOT_FOUND;
@@ -60,19 +57,19 @@ int write_file_content(const char *filename, const char *content){
 
     size_t content_len = strlen(content);
     size_t written = fwrite(content, 1, content_len, fp);
-    
+
     fclose(fp);
 
-    if(written != content_len){
+    if (written != content_len) {
         return FILE_ERROR_NOT_FOUND;
     }
 
     return FILE_SUCCESS;
 }
 
-int file_exists(const char *filename){
-    FILE *fp = fopen(filename, "r");
-    if (fp != NULL){
+int file_exists(const char* filename) {
+    FILE* fp = fopen(filename, "r");
+    if (fp != NULL) {
         fclose(fp);
         return 1;
     }
@@ -80,13 +77,11 @@ int file_exists(const char *filename){
     return 0;
 }
 
-void print_file_info(const file_info_t *info){
-    if(info == NULL){
+void print_file_info(const file_info_t* info) {
+    if (info == NULL) {
         return;
     }
 
-    printf("%-30s %10ld bytes %s\n",
-           info->name,
-           info->size,
+    printf("%-30s %10ld bytes %s\n", info->name, info->size,
            info->is_directory ? "[DIR]" : "[FILE]");
 }

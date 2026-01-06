@@ -118,7 +118,7 @@ void interactive_mode() {
             }
             break;
         }
-        case 3:{
+        case 3: {
             printf("Enter directory here: ");
 
             if (fgets(input, sizeof(input), stdin)) {
@@ -137,9 +137,9 @@ void interactive_mode() {
             show_process_info();
 
             break;
-    
-        case 5:
-            {printf("Enter command to execute: ");
+
+        case 5: {
+            printf("Enter command to execute: ");
 
             if (fgets(input, sizeof(input), stdin)) {
                 input[strcspn(input, "\n")] = 0;
