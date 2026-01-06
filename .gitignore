@@ -1,3 +1,4 @@
 main
 .vscode
 fsexplorer
+.clang-format

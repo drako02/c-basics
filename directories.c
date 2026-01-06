@@ -101,12 +101,12 @@ int list_directory_detailed(const char *directory_path){
 
     while ((entry = readdir(dir)) != NULL){
 
-        if ((strcmp(entry->d_name, ".")) || (strcmp(entry->d_name, "..")) == 0){
+        if ((strcmp(entry->d_name, ".")) == 0 || (strcmp(entry->d_name, "..")) == 0){
             continue;
         }
 
         char full_path[1024];
-        snprintf(full_path, sizeof(full_path), "%s%s", directory_path, entry->d_name);
+        snprintf(full_path, sizeof(full_path), "%s/%s", directory_path, entry->d_name);
 
         detailed_file_info_t info;
         if(get_detailed_info(full_path, &info) == 0){

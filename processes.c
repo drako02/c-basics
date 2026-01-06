@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE 200809L
 #include <unistd.h>
 #include <sys/wait.h>
 #include <stdio.h>
@@ -14,7 +15,7 @@ int execute_command(const char *command){
         return -1;
     } else if (pid == 0){
         // Child process
-        printf("Child process (PID: %s) executing command\n", getpid());
+        printf("Child process (PID: %d) executing command\n", getpid());
 
         // Simple command execution - split on spaces
         char *args[64];
@@ -61,6 +62,6 @@ void show_process_info(){
 
     char cwd[1024];
     if (getcwd(cwd, sizeof(cwd)) != NULL){
-        printf("Current Working Directory: %s\n, cwd");
+        printf("Current Working Directory: %s\n", cwd);
     }
 }
