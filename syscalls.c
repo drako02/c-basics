@@ -57,8 +57,15 @@ int sys_list_directory(const char* path) {
     }
 
     struct dirent* entry;
+    errno = 0;
     while ((entry = readdir(dir)) != NULL) {
         printf("%s\n", entry->d_name);
+    }
+
+    if (errno != 0) {
+        perror("readdir");
+        closedir(dir);
+        return -1;
     }
 
     closedir(dir);
