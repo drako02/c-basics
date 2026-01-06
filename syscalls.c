@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <dirent.h>
 
 int sys_open_file(const char* pathname, int flags) {
     int fd = open(pathname, flags);
@@ -47,17 +48,19 @@ int sys_close_file(int fd) {
 }
 
 int sys_list_directory(const char* path) {
-    // TODO We will use readdir systemcall, but need to include dirent.h
-    printf("Listing directory: %s (basic version)\n", path);
+    printf("Listing directory: %s\n", path);
 
-    // For now we only test that we can open the directory
-    int fd = sys_open_file(path, O_RDONLY);
-    if (fd == -1) {
-        perror("open directory");
+    DIR* dir = opendir(path);
+    if (dir == NULL) {
+        perror("opendir");
         return -1;
     }
 
-    printf("Successfully opened directory fd:%d\n", fd);
-    sys_close_file(fd);
+    struct dirent* entry;
+    while ((entry = readdir(dir)) != NULL) {
+        printf("%s\n", entry->d_name);
+    }
+
+    closedir(dir);
     return 0;
 }
